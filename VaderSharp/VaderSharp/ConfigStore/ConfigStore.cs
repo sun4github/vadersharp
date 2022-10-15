@@ -16,10 +16,19 @@ namespace VaderSharp
 
         private static ConfigStore config;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Dictionary<string, double> BoosterDict { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string[] Negations { get; private set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Dictionary<string, double> SpecialCaseIdioms { get; private set; }
 
         private ConfigStore(string languageCode)

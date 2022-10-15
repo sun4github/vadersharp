@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VaderSharp", "VaderSharp\VaderSharp.csproj", "{8216CD49-1D2E-4F93-A69E-6BF4006247B6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VaderSharpTestCore", "VaderSharpTestCore\VaderSharpTestCore.csproj", "{4F46C368-5EEE-4D24-80FE-BDB555F7C01E}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValderSharp.Tests", "ValderSharp.Tests\ValderSharp.Tests.csproj", "{DCF8A8E0-4783-4494-A6B5-F57E1EEBC4C1}"
 EndProject
 Global

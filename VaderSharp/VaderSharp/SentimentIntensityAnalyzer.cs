@@ -6,11 +6,12 @@ namespace VaderSharp
 {
     using System.IO;
     using System.Reflection;
+    using VaderSharp.Models;
 
     /// <summary>
     /// An abstraction to represent the sentiment intensity analyzer.
     /// </summary>
-    public class SentimentIntensityAnalyzer
+    public class SentimentIntensityAnalyzer : ISentimentIntensityAnalyzer
     {
         private const double ExclIncr = 0.292;
         private const double QuesIncrSmall = 0.18;
@@ -22,20 +23,14 @@ namespace VaderSharp
         static SentimentIntensityAnalyzer()
         {
             Assembly assembly;
-#if NET_35
-            assembly = typeof(SentimentIntensityAnalyzer).Assembly;
-#else
             assembly = typeof(SentimentIntensityAnalyzer).GetTypeInfo().Assembly;
-#endif
-            using (var stream = assembly.GetManifestResourceStream("VaderSharp.vader_lexicon.txt"))
-            using(var reader = new StreamReader(stream))
-            {
-                LexiconFullFile = reader.ReadToEnd().Split('\n');
-                Lexicon = MakeLexDic();
-            }
+            using var stream = assembly.GetManifestResourceStream("VaderSharp.Resources.vader_lexicon.txt");
+            using var reader = new StreamReader(stream);
+            LexiconFullFile = reader.ReadToEnd().Split('\n');
+            Lexicon = MakeLexDic();
         }
 
-        private static Dictionary<string,double> MakeLexDic()
+        private static Dictionary<string, double> MakeLexDic()
         {
             var dic = new Dictionary<string, double>();
             foreach (var line in LexiconFullFile)
@@ -131,8 +126,8 @@ namespace VaderSharp
             if (!containsBUT && !containsbut)
                 return sentiments;
 
-            int butIndex = (containsBUT) 
-                ? wordsAndEmoticons.IndexOf("BUT") 
+            int butIndex = (containsBUT)
+                ? wordsAndEmoticons.IndexOf("BUT")
                 : wordsAndEmoticons.IndexOf("but");
 
             for (int i = 0; i < sentiments.Count; i++)
@@ -141,7 +136,7 @@ namespace VaderSharp
                 if (i < butIndex)
                 {
                     sentiments.RemoveAt(i);
-                    sentiments.Insert(i,sentiment*0.5);
+                    sentiments.Insert(i, sentiment * 0.5);
                 }
                 else if (i > butIndex)
                 {
@@ -162,7 +157,7 @@ namespace VaderSharp
                     valence = valence * SentimentUtils.NScalar;
                 }
             }
-            else if (i > 0 && !Lexicon.ContainsKey(wordsAndEmoticons[i-1].ToLower()) 
+            else if (i > 0 && !Lexicon.ContainsKey(wordsAndEmoticons[i - 1].ToLower())
                 && wordsAndEmoticons[i - 1].ToLower() == "least")
             {
                 valence = valence * SentimentUtils.NScalar;
@@ -175,7 +170,7 @@ namespace VaderSharp
         {
             if (startI == 0)
             {
-                if (SentimentUtils.Negated(new List<string> {wordsAndEmoticons[i - 1]}))
+                if (SentimentUtils.Negated(new List<string> { wordsAndEmoticons[i - 1] }))
                     valence = valence * SentimentUtils.NScalar;
             }
             if (startI == 1)
@@ -185,7 +180,7 @@ namespace VaderSharp
                 {
                     valence = valence * 1.5;
                 }
-                else if (SentimentUtils.Negated(new List<string> {wordsAndEmoticons[i - (startI + 1)]}))
+                else if (SentimentUtils.Negated(new List<string> { wordsAndEmoticons[i - (startI + 1)] }))
                 {
                     valence = valence * SentimentUtils.NScalar;
                 }
@@ -214,8 +209,8 @@ namespace VaderSharp
             var twoOne = string.Concat(wordsAndEmoticons[i - 2], " ", wordsAndEmoticons[i - 1]);
             var threeTwoOne = string.Concat(wordsAndEmoticons[i - 3], " ", wordsAndEmoticons[i - 2], " ", wordsAndEmoticons[i - 1]);
             var threeTwo = string.Concat(wordsAndEmoticons[i - 3], " ", wordsAndEmoticons[i - 2]);
-            
-            string[] sequences = {oneZero, twoOneZero, twoOne, threeTwoOne, threeTwo};
+
+            string[] sequences = { oneZero, twoOneZero, twoOne, threeTwoOne, threeTwo };
 
             foreach (var seq in sequences)
             {
@@ -320,18 +315,11 @@ namespace VaderSharp
             double total = sifted.PosSum + Math.Abs(sifted.NegSum) + sifted.NeuCount;
             return new SentimentAnalysisResults
             {
-                Compound = Math.Round(compound,4),
-                Positive = Math.Round(Math.Abs(sifted.PosSum /total), 3),
-                Negative = Math.Round(Math.Abs(sifted.NegSum/total),3),
-                Neutral = Math.Round(Math.Abs(sifted.NeuCount/total), 3)
+                Compound = Math.Round(compound, 4),
+                Positive = Math.Round(Math.Abs(sifted.PosSum / total), 3),
+                Negative = Math.Round(Math.Abs(sifted.NegSum / total), 3),
+                Neutral = Math.Round(Math.Abs(sifted.NeuCount / total), 3)
             };
-        }
-
-        private class SiftSentiments
-        {
-            public double PosSum { get; set; }
-            public double NegSum { get; set; }
-            public int NeuCount { get; set; }
         }
     }
 

@@ -2,7 +2,7 @@
 
 namespace VaderSharp
 {
-    internal static class Extensions
+    internal static class StringExtensions
     {
         /// <summary>
         /// Determine if word is ALL CAPS

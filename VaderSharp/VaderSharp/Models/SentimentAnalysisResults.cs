@@ -1,4 +1,4 @@
-﻿namespace VaderSharp
+﻿namespace VaderSharp.Models
 {
     /// <summary>
     /// A model to represent the result of analysis.
